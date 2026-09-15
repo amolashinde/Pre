@@ -1,0 +1,47 @@
+# Pre
+class FitnessTracker:
+
+    def __init__(self):
+        pass
+
+    def register_user(self, fitness_data: dict, user_name: str) -> dict:
+        fitness_data[user_name] = {
+            "workouts": 0,
+            "calories": 0,
+            "status": "Inactive"
+        }
+        return fitness_data
+
+    def log_workout(self, fitness_data: dict, user_name: str, calories_burned: int) -> dict:
+        if user_name not in fitness_data:
+            raise KeyError("Error: User not found")
+
+        fitness_data[user_name]["workouts"] += 1
+        fitness_data[user_name]["calories"] += calories_burned
+
+        if fitness_data[user_name]["workouts"] > 5:
+            fitness_data[user_name]["status"] = "Active"
+
+        return fitness_data
+
+    def calculate_average_calories(self, fitness_data: dict, user_name: str) -> float:
+        if user_name not in fitness_data or fitness_data[user_name]["workouts"] == 0:
+            raise KeyError("Error: Invalid user or no workouts")
+
+        average = fitness_data[user_name]["calories"] / fitness_data[user_name]["workouts"]
+        return round(average, 2)
+
+    def generate_progress_report(self, fitness_data: dict) -> dict:
+        report = {}
+
+        for user_name in fitness_data:
+            calories = fitness_data[user_name]["calories"]
+
+            if calories < 1000:
+                report[user_name] = "Beginner"
+            elif calories < 5000:
+                report[user_name] = "Intermediate"
+            else:
+                report[user_name] = "Advanced"
+
+        return report
